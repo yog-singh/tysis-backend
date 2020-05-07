@@ -2,6 +2,7 @@ import time
 import numpy as np
 import pickle
 import cv2
+import sys
 from keras.models import load_model
 from keras.preprocessing import image
 from keras.preprocessing.image import img_to_array
@@ -32,9 +33,9 @@ classess = np.array(['Pepper__bell___Bacterial_spot', 'Pepper__bell___healthy',
  'Tomato__Tomato_YellowLeaf__Curl_Virus', 'Tomato__Tomato_mosaic_virus',
  'Tomato_healthy'])
 
-im = convert_image_to_array(image_dir)
+im = convert_image_to_array(sys.argv[1])
 np_image_li = np.array(im, dtype=np.float16) / 225.0
 npp_image = np.expand_dims(np_image_li, axis=0)
 result=model_disease.predict(npp_image)
 itemindex = np.where(result==np.max(result))
-print("probability:"+str(np.max(result))+"\n"+classess[itemindex[1][0]])
+print("probability:"+str(np.max(result))+" Disease: "+classess[itemindex[1][0]])
