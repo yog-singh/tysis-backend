@@ -43,7 +43,7 @@ def predict(files):
     return ("probability:"+str(np.max(result))+" Disease: "+classess[itemindex[1][0]])
 
 app = Flask(__name__)
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         #file = request.files['image']
