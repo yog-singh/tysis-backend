@@ -1,6 +1,5 @@
-import time
 import numpy as np
-import pickle
+import pickle5 as pickle
 import cv2
 import sys
 from keras.models import load_model

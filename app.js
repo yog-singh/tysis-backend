@@ -36,7 +36,7 @@ app.post('/upload', uploading.single('image'), function (req, res, next) {
       });
     });
   }
-  console.log(__dirname + "/public/images/" + req.file.filename);
+  //console.log(__dirname + "/public/images/" + req.file.filename);
 });
 //app.use('/users', usersRouter);
 
@@ -58,6 +58,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
-app.listen(8080, () => { 
+app.listen(8182, () => { 
   console.log('Listening on 8080.');
 })
