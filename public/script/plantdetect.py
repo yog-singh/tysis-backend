@@ -48,8 +48,7 @@ def upload_file():
     if request.method == 'POST':
         #file = request.files['image']
         #if file:
-        f = open('1.jpg','r')
-        msg = (predict(f))
+        msg = (predict('1.jpg'))
         return jsonify(
             message=msg
         )
