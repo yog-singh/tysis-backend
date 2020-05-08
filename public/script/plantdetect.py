@@ -1,6 +1,6 @@
 import numpy as np
 import os
-from flask import Flask, flash, request, redirect, url_for
+from flask import Flask, flash, request, redirect, url_for, json, jsonify
 from werkzeug.utils import secure_filename
 import pickle5 as pickle
 import cv2
@@ -46,9 +46,13 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        file = request.files['image']
-        if file:
-            f = open('1.jpg','r')
-            return (predict(f))
+        #file = request.files['image']
+        #if file:
+        f = open('1.jpg','r')
+        msg = (predict(f))
+        return jsonify(
+            message=msg
+        )
+
 
 app.run(host="0.0.0.0", port=5000)
