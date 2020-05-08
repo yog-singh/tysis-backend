@@ -31,6 +31,7 @@ app.post('/upload', uploading.single('image'), function (req, res, next) {
       datad = data.toString();
     });
     pythonProcess.on("close", (code) => {
+      console.log(datad);
       res.status(200).json({
         "message": datad
       });
