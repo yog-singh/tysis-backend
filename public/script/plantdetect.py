@@ -1,5 +1,7 @@
 import numpy as np
 import os
+from flask import Flask, flash, request, redirect, url_for
+from werkzeug.utils import secure_filename
 import pickle5 as pickle
 import cv2
 import sys
@@ -32,12 +34,21 @@ classess = np.array(['Pepper__bell___Bacterial_spot', 'Pepper__bell___healthy',
  'Tomato_Spider_mites_Two_spotted_spider_mite', 'Tomato__Target_Spot',
  'Tomato__Tomato_YellowLeaf__Curl_Virus', 'Tomato__Tomato_mosaic_virus',
  'Tomato_healthy'])
+def predict(files):
+    im = convert_image_to_array(files)
+    np_image_li = np.array(im, dtype=np.float16) / 225.0
+    npp_image = np.expand_dims(np_image_li, axis=0)
+    result=model_disease.predict(npp_image)
+    itemindex = np.where(result==np.max(result))
+    return ("probability:"+str(np.max(result))+" Disease: "+classess[itemindex[1][0]])
 
-im = convert_image_to_array(sys.argv[1])
-np_image_li = np.array(im, dtype=np.float16) / 225.0
-npp_image = np.expand_dims(np_image_li, axis=0)
-result=model_disease.predict(npp_image)
-itemindex = np.where(result==np.max(result))
-print("probability:"+str(np.max(result))+" Disease: "+classess[itemindex[1][0]])
+app = Flask(__name__)
+@app.route('/', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        file = request.files['image']
+        if file:
+            f = open('1.jpg','r')
+            return (predict(f))
 
-sys.stdout.flush()
+app.run(host="0.0.0.0", port=5000)

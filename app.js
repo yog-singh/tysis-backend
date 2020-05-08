@@ -23,14 +23,14 @@ const uploading = multer({
   dest: __dirname + '/public/images/'
 });
 
-app.post('/upload', uploading.single('image'), function (req, res, next) {
+await app.post('/upload', uploading.single('image'), function (req, res, next) {
   if (req.file) {
     var datad;
     const pythonProcess = spawn('python3',[`${__dirname}/public/script/plantdetect.py`, `${__dirname}/public/images/${req.file.filename}`]);
     pythonProcess.stdout.on("data", (data) => {
       datad = data.toString();
     });
-    pythonProcess.on("close", (code) => {
+    await pythonProcess.on("close", (code) => {
       console.log(datad);
       res.status(200).json({
         "message": datad
