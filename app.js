@@ -26,7 +26,7 @@ const uploading = multer({
 app.post('/upload', uploading.single('image'), function (req, res, next) {
   if (req.file) {
     var datad;
-    const pythonProcess = spawn('python',[`${__dirname}/public/script/pyts.py`, `${__dirname}/public/images/${req.file.filename}`]);
+    const pythonProcess = spawn('python3',[`${__dirname}/public/script/plantdetect.py`, `${__dirname}/public/images/${req.file.filename}`]);
     pythonProcess.stdout.on("data", (data) => {
       datad = data.toString();
     });
