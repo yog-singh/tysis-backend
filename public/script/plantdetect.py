@@ -9,8 +9,6 @@ from keras.models import load_model
 from keras.preprocessing import image
 from keras.preprocessing.image import img_to_array
 
-
-
 default_image_size = tuple((256, 256))
 
 model_disease=load_model("cnn_model.h5")
@@ -54,13 +52,13 @@ def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
-            flash('No file part')
+            #flash('No file part')
             return redirect(request.url)
         file = request.files['file']
         # if user does not select file, browser also
         # submit an empty part without filename
         if file.filename == '':
-            flash('No selected file')
+            #flash('No selected file')
             return redirect(request.url)
         if file:
             filename = secure_filename(file.filename)
@@ -68,4 +66,4 @@ def upload_file():
             return (UPLOAD_FOLDER+filename)
 
 # start flask app
-app.run(host="127.0.0.1", port=5000)
+app.run(host="0.0.0.0", port=5000)
