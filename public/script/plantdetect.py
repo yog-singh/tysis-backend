@@ -1,10 +1,15 @@
 import numpy as np
+import os
+from flask import Flask, flash, request, redirect, url_for
+from werkzeug.utils import secure_filename
 import pickle5 as pickle
 import cv2
 import sys
 from keras.models import load_model
 from keras.preprocessing import image
 from keras.preprocessing.image import img_to_array
+
+
 
 default_image_size = tuple((256, 256))
 
@@ -32,9 +37,35 @@ classess = np.array(['Pepper__bell___Bacterial_spot', 'Pepper__bell___healthy',
  'Tomato__Tomato_YellowLeaf__Curl_Virus', 'Tomato__Tomato_mosaic_virus',
  'Tomato_healthy'])
 
-im = convert_image_to_array(sys.argv[1])
-np_image_li = np.array(im, dtype=np.float16) / 225.0
-npp_image = np.expand_dims(np_image_li, axis=0)
-result=model_disease.predict(npp_image)
-itemindex = np.where(result==np.max(result))
-print("probability:"+str(np.max(result))+" Disease: "+classess[itemindex[1][0]])
+def predict(fileloc):
+    im = convert_image_to_array(sys.argv[1])
+    np_image_li = np.array(im, dtype=np.float16) / 225.0
+    npp_image = np.expand_dims(np_image_li, axis=0)
+    result=model_disease.predict(npp_image)
+    itemindex = np.where(result==np.max(result))
+    return ("probability:"+str(np.max(result))+" Disease: "+classess[itemindex[1][0]])
+
+UPLOAD_FOLDER = '/root/tysis-backend/public/images'
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return (UPLOAD_FOLDER+filename)
+
+# start flask app
+app.run(host="127.0.0.1", port=5000)
